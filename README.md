@@ -2,6 +2,8 @@
 
 AI-generated blog articles for [fetchchina.com/blog](https://fetchchina.com/blog)
 
+> **博客地址**：https://fetchchina.com/blog/（主站子路径，非子域名）
+
 ## 目录结构
 
 ```

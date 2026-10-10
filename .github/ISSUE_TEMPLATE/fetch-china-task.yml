@@ -1,0 +1,33 @@
+name: Fetch China 任务
+ description: 开 Issue 即进入流水线；Notion 看板只读同步。
+ title: "[FC] "
+ labels:
+   - ai:composer
+ body:
+   - type: markdown
+     attributes:
+       value: |
+         在 GitHub 贴 **`ai:ready`** 标签后，Actions 会同步到 Notion 并触发 AI（无需拖 Notion 看板）。
+   - type: textarea
+     id: handoff
+     attributes:
+       label: Handoff（给 AI 的说明）
+       description: 仓库路径、约束、链接
+     validations:
+       required: true
+   - type: textarea
+     id: acceptance
+     attributes:
+       label: Acceptance（验收标准）
+     validations:
+       required: true
+   - type: dropdown
+     id: implementer
+     attributes:
+       label: Implementer AI
+       options:
+         - ai:composer
+         - ai:glm
+         - ai:general
+     validations:
+       required: true

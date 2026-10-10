@@ -6,65 +6,73 @@
 
 ---
 
-## 别进错页面
+## 你现在看到的页面是对的
 
-| ❌ 不要 | ✅ 要 |
-|--------|------|
-| Notion **开发者工具 → 新连接 → OAuth** | [notion.so/my-integrations](https://www.notion.so/my-integrations) → **新建集成**（Internal Integration） |
-| 连接名称填 `NOTION_DATABASE_ID` | 集成名称填 **`Fetch China GitHub Sync`** |
+路径：**设置 → 连接 → 开发者工具**（顶部有：开始 / Workers / **连接** / **个人访问令牌** / MCP 令牌）
 
-OAuth 是给 Cursor/网页登录用的；**GitHub Actions 必须用 Internal Integration 的 Secret**。
+| 标签 | 要不要点 |
+|------|----------|
+| **Workers**（要升级） | ❌ 不用，和本仪表盘无关 |
+| **新连接 → OAuth** | ❌ 不用 |
+| **个人访问令牌** | ✅ **就用这个**（最简单） |
+| **连接 → 内部连接 + API 令牌** | ✅ 备选（需工作区所有者时） |
+
+旧版入口 [notion.so/my-integrations](https://www.notion.so/my-integrations) 若打不开，**忽略**，用上面的「个人访问令牌」即可。
 
 ---
 
-## 你只需要 3 步
+## 推荐：个人访问令牌（2 步 + 交给我）
 
-### 1. 创建 Notion 集成
+### 1. 创建令牌
 
-1. 打开 https://www.notion.so/my-integrations
-2. **+ 新建集成** → 名称：`Fetch China GitHub Sync`
-3. 关联工作区 → **提交**
-4. 复制 **Internal Integration Secret**（形如 `ntn_...` 或 `secret_...`）
+1. 在 **开发者工具** 点 **「个人访问令牌」**（Personal access tokens）
+2. **新建令牌** / New token
+3. 名称：`Fetch China GitHub Sync`
+4. 能力勾选 **Notion API**（若有工作区选择，选 **Xiaofeng yang's…** 那个）
+5. **创建** → **立刻复制**（只显示一次）
 
-### 2. 把集成连到看板
+> 若看不到「新建令牌」：Business/Enterprise 可能默认禁止成员建 PAT，请工作区**所有者**在 **设置 → 连接** 里允许成员创建 PAT，或由所有者代建一条。
 
-1. 打开 Notion：[Fetch China 工程看板](https://app.notion.com/p/62d957d4c80e4876ac98ce829461ef0b)
-2. 右上角 **⋯** → **连接** / **Connect to** → 选 **Fetch China GitHub Sync**
+用 PAT **不用**再去工程看板里「连接集成」——令牌代表**你自己**，你能打开的看板 API 就能写。
 
-### 3. 把 Secret 交给 GitHub（二选一）
+### 2. 把令牌交给 GitHub（二选一）
 
 **A. 让 Cursor 助手代填（推荐）**
 
-在本机新建文件（不要发到聊天里）：
-
-`C:\Users\Administrator\.cursor\secrets\notion-github-sync.env`
-
-内容一行：
+文件：`C:\Users\Administrator\.cursor\secrets\notion-github-sync.env`
 
 ```
-NOTION_TOKEN=这里粘贴集成Secret
+NOTION_TOKEN=这里粘贴令牌
 ```
 
-保存后回复助手：**「notion token 已放好」**。
+保存后回复：**「notion token 已放好」**（不要粘到聊天里）。
 
-**B. 自己在网页填**
+**B. 网页自己填**
 
-https://github.com/martinyyang/fetch-china-blog-articles/settings/secrets/actions
+https://github.com/martinyyang/fetch-china-blog-articles/settings/secrets/actions → 新建 `NOTION_TOKEN`
 
-→ **New repository secret** → Name: `NOTION_TOKEN` → Value: 粘贴 Secret。
+---
+
+## 备选：内部连接（团队机器人）
+
+仅当 PAT 不可用、且你是**工作区所有者**时：
+
+1. 开发者工具 → **连接** → **新建连接** → 验证方式选 **API 令牌**（不要 OAuth）
+2. 名称 `Fetch China GitHub Sync` → 创建
+3. **Configuration** 里复制 API token
+4. **Content access** 或看板 ⋯ → 连接，把 **Fetch China 工程看板** 授权给该连接
+5. 同样写入 GitHub Secret `NOTION_TOKEN`
 
 ---
 
 ## 验收
 
-1. Actions → **Notion dashboard sync** → **Run workflow**
-2. 打开 Notion **流水线看板**，应看到与 GitHub Issues 对应的行
-
-演示 Issue：仓库 Issues 列表里标题含「仪表盘演示」的那条。
+1. GitHub Actions → **Notion dashboard sync** → **Run workflow**
+2. Notion **流水线看板** 应与 Issues 一致（含「仪表盘演示」）
 
 ---
 
 ## 已有权限（无需你再给）
 
-- **GitHub**：本机 `gh` 已登录 `martinyyang`，助手可写仓库 Secrets（除 token 外）
-- **Notion（Cursor）**：OAuth 已连，助手可读写在 Fetch China 资料库
+- **GitHub**：本机 `gh` 已登录
+- **Notion（Cursor）**：OAuth 已连
